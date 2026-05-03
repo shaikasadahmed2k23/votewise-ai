@@ -289,7 +289,7 @@ curl -X POST https://YOUR_CLOUD_RUN_URL/api/eligibility \
 ## 👨‍💻 Author
 
 **Shaik Asad Ahmed**  
-B.Tech Computer Science (AI) | 4th Year  
+B.Tech Computer Science (AI) 
 GitHub: [@shaikasadahmed2k23](https://github.com/shaikasadahmed2k23)
 
 ---
