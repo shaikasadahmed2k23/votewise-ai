@@ -146,7 +146,12 @@
             display: none;
             opacity: 0;
             transform: translateY(10px);
-            animation: fadeInSlide 0.4s ease forwards;
+            animation: crossFade 0.4s ease forwards;
+        }
+
+        @keyframes crossFade {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .tab-content.active {
@@ -234,15 +239,18 @@
         }
 
         .message.error {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border-color: #fca5a5;
+            background-color: #fff1f2;
+            color: #be123c;
+            border: 1px solid #fda4af;
             align-self: center;
-            border-radius: 8px;
+            border-radius: 12px;
             text-align: center;
+            font-size: 0.9rem;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        /* Typing Indicator */
+        /* Loading Spinner */
         .typing-indicator {
             display: none;
             align-self: flex-start;
@@ -252,40 +260,29 @@
             border-radius: 18px;
             border-bottom-left-radius: 4px;
             align-items: center;
-            gap: 4px;
+            gap: 10px;
             margin-bottom: 1rem;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
         .typing-indicator.active {
             display: flex;
         }
 
-        .dot {
-            width: 8px;
-            height: 8px;
-            background-color: #a0aec0;
+        .spinner-ring {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #e0e0e0;
+            border-top-color: var(--saffron);
             border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out both;
+            animation: spin 1s linear infinite;
         }
 
-        .dot:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .dot:nth-child(2) {
-            animation-delay: -0.16s;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            80%,
-            100% {
-                transform: scale(0);
-            }
-
-            40% {
-                transform: scale(1);
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
 
@@ -578,7 +575,14 @@
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.8rem;
+                align-items: flex-start;
+            }
+
+            .tab-buttons {
+                width: 100%;
+                padding-bottom: 0.5rem;
+                justify-content: flex-start;
             }
 
             .chat-container {
@@ -603,6 +607,76 @@
                 padding-left: 10px;
             }
         }
+    
+        /* New Classes to replace inline styles */
+        .text-saffron { color: var(--saffron); }
+        .text-white { color: var(--white); }
+        .text-navy { color: var(--navy); }
+        .text-light { color: var(--text-light); }
+        .m-0 { margin: 0; }
+        .mb-1-5 { margin-bottom: 1.5rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .mt-0-5 { margin-top: 0.5rem; }
+        .p-0 { padding: 0; }
+        .text-lg { font-size: 1.2rem; }
+        .text-xl { font-size: 1.5rem; }
+        .w-full { width: 100%; }
+        .max-w-600 { max-width: 600px; margin: 0 auto; }
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        
+        /* Copy Button */
+        .copy-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+            padding: 4px;
+        }
+        .copy-btn:hover { color: var(--navy); }
+
+        /* Quiz Explanation */
+        .explanation {
+            background: #f0f4f8;
+            border-left: 4px solid var(--navy);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none;
+            animation: fadeInSlide 0.3s ease;
+        }
+
+        /* Character Count */
+        #char-count {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 0.3rem;
+            margin-right: 1rem;
+        }
+
+        /* App Footer */
+        .app-footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Message header for Copy */
+        .message-content { flex: 1; }
+        .message-footer { display: flex; justify-content: flex-end; }
+
     </style>
 </head>
 
@@ -619,13 +693,13 @@
     <nav>
         <div class="nav-container">
             <a href="#" class="logo">
-                <span style="color: var(--saffron);">Vote</span><span style="color: var(--white);">Wise</span>
+                <span class="text-saffron">Vote</span><span class="text-white">Wise</span>
             </a>
             <div class="tab-buttons">
-                <button class="tab-btn active" onclick="switchTab('chat', event)">💬 Ask VoteWise</button>
-                <button class="tab-btn" onclick="switchTab('timeline', event)">📅 Election Timeline</button>
-                <button class="tab-btn" onclick="switchTab('quiz', event)">🧠 Civic Quiz</button>
-                <button class="tab-btn" onclick="switchTab('eligibility', event)">✅ Am I Eligible?</button>
+                <button class="tab-btn active" aria-label="Ask VoteWise Tab" onclick="switchTab('chat', event)">💬 Ask VoteWise</button>
+                <button class="tab-btn" aria-label="Election Timeline Tab" onclick="switchTab('timeline', event)">📅 Election Timeline</button>
+                <button class="tab-btn" aria-label="Civic Quiz Tab" onclick="switchTab('quiz', event)">🧠 Civic Quiz</button>
+                <button class="tab-btn" aria-label="Check Eligibility Tab" onclick="switchTab('eligibility', event)">✅ Am I Eligible?</button>
             </div>
         </div>
     </nav>
@@ -633,35 +707,35 @@
     <main>
         <!-- 1. Chat Tab -->
         <div id="chat" class="tab-content active">
-            <div class="card" style="padding: 0;">
+            <div class="card p-0">
                 <div class="chat-container">
-                    <div class="chat-messages" id="chat-messages">
+                    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
                         <div class="message ai">
                             Hello! I'm VoteWise, your AI election assistant. Ask me anything about the Indian electoral
                             process, your voting rights, or how elections work!
                         </div>
 
                         <div class="typing-indicator" id="typing-indicator">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
+                            <div class="spinner-ring"></div>
+                            VoteWise AI is thinking...
                         </div>
                     </div>
 
                     <div class="quick-chips">
-                        <div class="chip" onclick="sendQuickMessage('How voting works')">How voting works</div>
-                        <div class="chip" onclick="sendQuickMessage('Register to vote')">Register to vote</div>
-                        <div class="chip" onclick="sendQuickMessage('What is NOTA')">What is NOTA</div>
-                        <div class="chip" onclick="sendQuickMessage('Vote counting')">Vote counting</div>
-                        <div class="chip" onclick="sendQuickMessage('Voter rights')">Voter rights</div>
-                        <div class="chip" onclick="sendQuickMessage('Model Code')">Model Code</div>
+                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('How voting works')">How voting works</div>
+                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('Register to vote')">Register to vote</div>
+                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('What is NOTA')">What is NOTA</div>
+                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('Vote counting')">Vote counting</div>
+                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('Voter rights')">Voter rights</div>
+                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('Model Code')">Model Code</div>
                     </div>
 
                     <div class="chat-input-area">
                         <input type="text" id="chat-input" placeholder="Type your question here..."
-                            onkeypress="handleEnter(event)">
-                        <button onclick="sendMessage()">Send</button>
+                            aria-label="Chat Input" maxlength="500" oninput="updateCharCount()" onkeypress="handleEnter(event)">
+                        <button id="send-btn" onclick="sendMessage()" aria-label="Send Message">Send</button>
                     </div>
+                    <div id="char-count">0/500</div>
                 </div>
             </div>
         </div>
@@ -670,7 +744,7 @@
         <div id="timeline" class="tab-content">
             <div class="card">
                 <h2>The Indian Election Process</h2>
-                <p style="margin-bottom: 2rem; color: var(--text-light);">A step-by-step guide to how elections are
+                <p class="mb-2 text-light">A step-by-step guide to how elections are
                     conducted in the world's largest democracy.</p>
 
                 <div class="timeline">
@@ -772,7 +846,7 @@
             <div class="card quiz-container">
                 <div id="quiz-game">
                     <div class="quiz-header">
-                        <h2 style="margin: 0;">Civic Knowledge Quiz</h2>
+                        <h2 class="m-0">Civic Knowledge Quiz</h2>
                         <span id="question-tracker">Question 1 of 8</span>
                     </div>
 
@@ -785,15 +859,15 @@
                     <div class="options" id="options">
                         <!-- Options injected by JS -->
                     </div>
+                    <div id="quiz-explanation" class="explanation"></div>
 
                     <button id="next-btn" class="btn-primary" onclick="nextQuestion()">Next Question</button>
                 </div>
 
                 <div id="quiz-result" class="quiz-result">
                     <h3>Quiz Completed!</h3>
-                    <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">Your Score: <strong id="score"
-                            style="color: var(--navy); font-size: 1.5rem;">0 / 8</strong></p>
-                    <p id="score-message" style="margin-bottom: 2rem; color: var(--text-light);"></p>
+                    <p class="text-lg mb-1-5">Your Score: <strong id="score" class="text-navy text-xl">0 / 8</strong></p>
+                    <p id="score-message" class="mb-2 text-light"></p>
                     <button class="btn-primary" onclick="startQuiz()">Retry Quiz</button>
                 </div>
             </div>
@@ -801,14 +875,15 @@
 
         <!-- 4. Eligibility Tab -->
         <div id="eligibility" class="tab-content">
-            <div class="card" style="max-width: 600px; margin: 0 auto;">
+            <div class="card max-w-600">
                 <h2>Check Voter Eligibility</h2>
-                <p style="margin-bottom: 1.5rem; color: var(--text-light);">Find out if you meet the basic requirements
+                <p class="mb-1-5 text-light">Find out if you meet the basic requirements
                     to cast a vote in the Indian elections.</p>
 
                 <div class="form-group">
+                    <span id="country-desc" class="hidden">Select your country of citizenship.</span>
                     <label for="country">Country of Citizenship</label>
-                    <select id="country">
+                    <select id="country" aria-describedby="country-desc">
                         <option value="">Select a country...</option>
                         <option value="India">India</option>
                         <option value="USA">United States</option>
@@ -818,66 +893,119 @@
                 </div>
 
                 <div class="form-group">
+                    <span id="age-desc" class="hidden">Enter your age in years.</span>
                     <label for="age">Your Age (in years)</label>
-                    <input type="number" id="age" min="1" max="120" placeholder="e.g. 21">
+                    <input type="number" id="age" min="1" max="120" placeholder="e.g. 21" aria-describedby="age-desc">
                 </div>
 
-                <button class="btn-primary" style="width: 100%; margin-top: 0.5rem;" onclick="checkEligibility()">Check
+                <button class="btn-primary" class="w-full mt-0-5" onclick="checkEligibility()">Check
                     Eligibility</button>
 
                 <div id="eligibility-result" class="result-box"></div>
             </div>
         </div>
-    </main>
+        </main>
+    <footer class="app-footer">
+        Built with ❤️ for Prompt Wars by GDG | Powered by Gemini AI
+    </footer>
 
     <script>
-        // --- Tab Switching Logic ---
-        function switchTab(tabId, event) {
-            // Update buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            if (event) {
-                event.currentTarget.classList.add('active');
-            }
-
-            // Update content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(tabId).classList.add('active');
-        }
-
-        // --- Chatbot Logic ---
+        // DOM Elements
         const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
         const typingIndicator = document.getElementById('typing-indicator');
+        
+        // State variables
+        let isSending = false;
+        let lastMessage = "";
 
+        /**
+         * Updates the character count display for the chat input
+         */
+        function updateCharCount() {
+            const charCountEl = document.getElementById('char-count');
+            const len = chatInput.value.length;
+            charCountEl.textContent = `${len}/500`;
+        }
+
+        /**
+         * Switches the active tab and updates UI
+         * @param {string} tabId - The ID of the tab to switch to
+         * @param {Event} event - The click event object
+         */
+        function switchTab(tabId, event) {
+            // ... (keep existing body except add check for quiz caching) ...
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            if (event) event.currentTarget.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (tabId === 'quiz' && currentQuestion === 0 && score === 0 && document.getElementById('options').innerHTML.trim() === '') {
+                startQuiz();
+            }
+        }
+
+        /**
+         * Copies text to clipboard
+         * @param {string} text - The text to copy
+         */
+        function copyText(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '📋 Copied!';
+                setTimeout(() => button.innerHTML = originalText, 2000);
+            });
+        }
+
+        /**
+         * Handles the enter key press on the chat input
+         */
         function handleEnter(e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !isSending) {
                 sendMessage();
             }
         }
 
+        /**
+         * Populates input and sends a predefined quick message
+         * @param {string} text - The predefined question
+         */
         function sendQuickMessage(text) {
+            if (isSending) return;
             chatInput.value = text;
+            updateCharCount();
             sendMessage();
         }
 
-        async function sendMessage() {
-            const message = chatInput.value.trim();
+        /**
+         * Sends the user's message to the backend API and handles the response
+         * Includes debouncing to prevent double submissions
+         */
+        async function sendMessage(retryText = null) {
+            if (isSending) return;
+            
+            const message = retryText || chatInput.value.trim();
             if (!message) return;
 
-            // Remove previous error messages if any
+            isSending = true;
+            lastMessage = message;
+            
+            const sendBtn = document.getElementById('send-btn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = '...';
+
             const existingErrors = document.querySelectorAll('.message.error');
             existingErrors.forEach(err => err.remove());
 
-            // Add User Message
-            addMessageToChat('user', message);
+            if (!retryText) {
+                addMessageToChat('user', message);
+            }
+            
             chatInput.value = '';
+            updateCharCount();
 
-            // Show typing indicator
-            chatMessages.appendChild(typingIndicator); // move to bottom
+            chatMessages.appendChild(typingIndicator);
             typingIndicator.classList.add('active');
             scrollToBottom();
 
@@ -888,29 +1016,44 @@
                     body: JSON.stringify({ message })
                 });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+                if (!response.ok) throw new Error('Network response was not ok');
 
                 const data = await response.json();
                 typingIndicator.classList.remove('active');
-
-                // Assuming backend returns { response: "text" }
+                
                 const botReply = data.response || data.reply || data.answer || "I received your message but couldn't parse the response.";
                 addMessageToChat('ai', botReply);
 
             } catch (error) {
                 typingIndicator.classList.remove('active');
-                addMessageToChat('error', "Hmm, I couldn't connect right now. Please check your API key or try again shortly.");
+                addMessageToChat('error', "⚠️ Hmm, I couldn't reach the AI right now. Please check your connection and try again.");
+            } finally {
+                isSending = false;
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send';
             }
         }
 
+        /**
+         * Appends a new message bubble to the chat container
+         * @param {string} role - 'user', 'ai', or 'error'
+         * @param {string} text - The message content
+         */
         function addMessageToChat(role, text) {
             const div = document.createElement('div');
             div.className = `message ${role}`;
-            div.textContent = text;
+            
+            if (role === 'ai') {
+                div.innerHTML = `<div class="message-content">${text.replace(/\n/g, '<br>')}</div>
+                                 <div class="message-footer">
+                                    <button class="copy-btn" onclick="copyText(this, \`${text.replace(/`/g, '\`')}\`)" aria-label="Copy response">📄 Copy</button>
+                                 </div>`;
+            } else if (role === 'error') {
+                div.innerHTML = `<div>${text}</div><button class="btn-primary" style="margin-top: 10px; padding: 0.5rem 1rem;" onclick="sendMessage(lastMessage)">Retry</button>`;
+            } else {
+                div.textContent = text;
+            }
 
-            // Insert before typing indicator
             if (role !== 'error') {
                 chatMessages.insertBefore(div, typingIndicator);
             } else {
@@ -919,55 +1062,24 @@
             scrollToBottom();
         }
 
+        /**
+         * Scrolls the chat container to the bottom
+         */
         function scrollToBottom() {
-            // Slight delay to ensure DOM updates before scroll
             setTimeout(() => {
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }, 50);
         }
 
-        // --- Civic Quiz Logic ---
         const quizData = [
-            {
-                question: "What is the minimum voting age in India?",
-                options: ["16 years", "18 years", "21 years", "25 years"],
-                correct: 1
-            },
-            {
-                question: "Which body conducts elections to the Lok Sabha in India?",
-                options: ["Supreme Court of India", "Election Commission of India", "Parliament of India", "President of India"],
-                correct: 1
-            },
-            {
-                question: "What does EVM stand for?",
-                options: ["Electronic Voting Machine", "Electoral Verification Machine", "Election Validating Mechanism", "Electronic Voter Module"],
-                correct: 0
-            },
-            {
-                question: "What does NOTA stand for?",
-                options: ["No Official Target Assigned", "None Of The Above", "Never Overturn The Authority", "Not On The Agenda"],
-                correct: 1
-            },
-            {
-                question: "How many members are there in the Lok Sabha (currently elected)?",
-                options: ["250", "543", "545", "552"],
-                correct: 1
-            },
-            {
-                question: "What is VVPAT?",
-                options: ["Voter Verifiable Paper Audit Trail", "Voting Verification Protocol And Technique", "Valid Vote Paper Audit Trail", "Voter Validation Process And Trail"],
-                correct: 0
-            },
-            {
-                question: "Who appoints the Chief Election Commissioner of India?",
-                options: ["Prime Minister", "Chief Justice of India", "President of India", "Parliament"],
-                correct: 2
-            },
-            {
-                question: "When is National Voters' Day celebrated in India?",
-                options: ["15th August", "26th January", "25th January", "2nd October"],
-                correct: 2
-            }
+            { question: "What is the minimum voting age in India?", options: ["16 years", "18 years", "21 years", "25 years"], correct: 1, explanation: "Article 326 of the Constitution grants universal adult suffrage to citizens above 18 years." },
+            { question: "Which body conducts elections to the Lok Sabha in India?", options: ["Supreme Court of India", "Election Commission of India", "Parliament of India", "President of India"], correct: 1, explanation: "The ECI is an autonomous constitutional authority responsible for administering election processes in India." },
+            { question: "What does EVM stand for?", options: ["Electronic Voting Machine", "Electoral Verification Machine", "Election Validating Mechanism", "Electronic Voter Module"], correct: 0, explanation: "EVM stands for Electronic Voting Machine, which replaced paper ballots to speed up voting and reduce fraud." },
+            { question: "What does NOTA stand for?", options: ["No Official Target Assigned", "None Of The Above", "Never Overturn The Authority", "Not On The Agenda"], correct: 1, explanation: "NOTA allows voters to officially reject all candidates contesting in their constituency." },
+            { question: "How many members are there in the Lok Sabha (currently elected)?", options: ["250", "543", "545", "552"], correct: 1, explanation: "There are 543 elected constituencies in the Lok Sabha." },
+            { question: "What is VVPAT?", options: ["Voter Verifiable Paper Audit Trail", "Voting Verification Protocol And Technique", "Valid Vote Paper Audit Trail", "Voter Validation Process And Trail"], correct: 0, explanation: "VVPAT provides a printed slip for 7 seconds to the voter to verify their vote." },
+            { question: "Who appoints the Chief Election Commissioner of India?", options: ["Prime Minister", "Chief Justice of India", "President of India", "Parliament"], correct: 2, explanation: "The President of India appoints the Chief Election Commissioner." },
+            { question: "When is National Voters' Day celebrated in India?", options: ["15th August", "26th January", "25th January", "2nd October"], correct: 2, explanation: "Celebrated on January 25th to mark the foundation day of the Election Commission of India in 1950." }
         ];
 
         let currentQuestion = 0;
@@ -980,7 +1092,11 @@
         const nextBtn = document.getElementById('next-btn');
         const quizGame = document.getElementById('quiz-game');
         const quizResultBox = document.getElementById('quiz-result');
+        const explanationBox = document.getElementById('quiz-explanation');
 
+        /**
+         * Initializes and starts the civic quiz
+         */
         function startQuiz() {
             currentQuestion = 0;
             score = 0;
@@ -989,25 +1105,34 @@
             loadQuestion();
         }
 
+        /**
+         * Loads the current question and its options into the UI
+         */
         function loadQuestion() {
             const q = quizData[currentQuestion];
             questionText.textContent = q.question;
             tracker.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
             progressFill.style.width = `${((currentQuestion) / quizData.length) * 100}%`;
             nextBtn.style.display = 'none';
+            explanationBox.style.display = 'none';
 
             optionsContainer.innerHTML = '';
             q.options.forEach((opt, index) => {
-                const btn = document.createElement('div');
+                const btn = document.createElement('button');
                 btn.className = 'option';
                 btn.textContent = opt;
+                btn.setAttribute('aria-label', `Option: ${opt}`);
                 btn.onclick = () => selectOption(index, btn);
                 optionsContainer.appendChild(btn);
             });
         }
 
+        /**
+         * Handles option selection, highlights correct/wrong, and shows explanation
+         * @param {number} selectedIndex - The index of the selected option
+         * @param {HTMLElement} btnElement - The clicked button element
+         */
         function selectOption(selectedIndex, btnElement) {
-            // Disable all options
             const allOptions = optionsContainer.querySelectorAll('.option');
             allOptions.forEach(opt => opt.classList.add('disabled'));
 
@@ -1018,43 +1143,19 @@
                 score++;
             } else {
                 btnElement.classList.add('wrong');
-                // Highlight correct one
                 allOptions[correctIndex].classList.add('correct');
             }
 
+            explanationBox.textContent = quizData[currentQuestion].explanation;
+            explanationBox.style.display = 'block';
+
             nextBtn.style.display = 'block';
-            // Update progress bar to include current question
             progressFill.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
         }
-
-        function nextQuestion() {
-            currentQuestion++;
-            if (currentQuestion < quizData.length) {
-                loadQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        function showResults() {
-            quizGame.style.display = 'none';
-            quizResultBox.style.display = 'block';
-            document.getElementById('score').textContent = `${score} / ${quizData.length}`;
-
-            const msgEl = document.getElementById('score-message');
-            if (score === quizData.length) {
-                msgEl.textContent = "Perfect score! You are highly knowledgeable about Indian elections.";
-            } else if (score >= 5) {
-                msgEl.textContent = "Great job! You have a solid understanding of civic duties.";
-            } else {
-                msgEl.textContent = "Good try! Review the timeline and ask VoteWise to learn more.";
-            }
-        }
-
-        // Initialize quiz
-        startQuiz();
-
-        // --- Eligibility Logic ---
+// --- Eligibility Logic ---
+        /**
+         * Evaluates voter eligibility based on age and country
+         */
         function checkEligibility() {
             const country = document.getElementById('country').value;
             const ageInput = document.getElementById('age').value;

@@ -2,8 +2,27 @@
 
 > An AI-powered interactive assistant that helps citizens understand the election process, voter rights, timelines, and civic duties.
 
+<div align="center">
+  <a href="https://votewise-ai-1074455053915.us-central1.run.app/">
+    <img src="https://img.shields.io/badge/🚀_Live_Demo-Click_Here-2ea44f?style=for-the-badge" alt="Live Demo" />
+  </a>
+</div>
+<br/>
+
 [![Google Cloud Run](https://img.shields.io/badge/Deployed%20on-Cloud%20Run-4285F4?logo=google-cloud)](https://cloud.google.com/run)
 [![Gemini AI](https://img.shields.io/badge/Powered%20by-Gemini%20AI-orange)](https://ai.google.dev)
+![Python](https://img.shields.io/badge/Python-3.14-blue?logo=python)
+![Flask](https://img.shields.io/badge/Flask-3.0.3-black?logo=flask)
+![Tests](https://img.shields.io/badge/Tests-42%20Passing-brightgreen?logo=pytest)
+![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
+---
+
+## 🎯 Problem Statement
+Millions of eligible voters don't participate in elections simply because 
+they don't understand the process. VoteWise AI solves this by making 
+election education interactive, accessible, and AI-powered.
 
 ---
 
@@ -38,6 +57,28 @@ VoteWise AI combines **Google Gemini's language capabilities** with structured c
 
 ---
 
+## 🧠 Prompt Engineering (How Gemini AI is Used)
+- System prompt restricts Gemini strictly to election education topics
+- Conversation history is passed with every request for context-aware replies
+- Eligibility checker uses country-specific dynamic prompts
+- Prompts are designed to keep responses neutral, factual, and beginner-friendly
+- Example system prompt excerpt:
+```text
+You are VoteWise AI, an expert Election Education Assistant 
+for Indian voters. You ONLY answer questions related to:
+- Indian election process, ECI, EVMs, VVPAT
+- Voter registration, EPIC cards, Form 6
+- Model Code of Conduct, NOTA, election phases
+- Voter rights and responsibilities
+
+Keep answers concise, factual, and friendly. 
+Use simple language suitable for first-time voters.
+Always encourage democratic participation.
+If asked anything unrelated, politely redirect to election topics.
+```
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
@@ -48,6 +89,17 @@ VoteWise AI combines **Google Gemini's language capabilities** with structured c
 | Deployment | Google Cloud Run |
 | Container | Docker |
 | Frontend | HTML5 + CSS3 + Vanilla JS |
+
+---
+
+## ☁️ Google Services Used
+| Service | Purpose |
+|---|---|
+| Gemini 2.0 Flash API | Core AI chatbot and eligibility checker |
+| Google Cloud Run | Serverless deployment and hosting |
+| Google Antigravity | App built using intent-driven development |
+| Google Artifact Registry | Docker image storage |
+| Google Cloud Build | CI/CD container build pipeline |
 
 ---
 
@@ -101,14 +153,14 @@ PORT=8080
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="screenshots/ask_votewise.png" alt="Ask VoteWise AI Chatbot" width="100%"/>
+      <img src="Screenshots/ask_votewise.png" alt="Ask VoteWise AI Chatbot" width="100%"/>
       <br/>
       <b>💬 Ask VoteWise</b>
       <br/>
       <sub>AI-powered chatbot for all election queries</sub>
     </td>
     <td align="center" width="50%">
-      <img src="screenshots/election_timeline.png" alt="Election Timeline" width="100%"/>
+      <img src="Screenshots/election_timeline.png" alt="Election Timeline" width="100%"/>
       <br/>
       <b>📅 Election Timeline</b>
       <br/>
@@ -117,14 +169,14 @@ PORT=8080
   </tr>
   <tr>
     <td align="center" width="50%">
-      <img src="screenshots/civic_quiz.png" alt="Civic Quiz" width="100%"/>
+      <img src="Screenshots/civic_quiz.png" alt="Civic Quiz" width="100%"/>
       <br/>
       <b>🧠 Civic Quiz</b>
       <br/>
       <sub>8-question interactive quiz with live scoring</sub>
     </td>
     <td align="center" width="50%">
-      <img src="screenshots/am_i_eligible.png" alt="Voter Eligibility Checker" width="100%"/>
+      <img src="Screenshots/am_i_eligible.png" alt="Voter Eligibility Checker" width="100%"/>
       <br/>
       <b>✅ Am I Eligible?</b>
       <br/>
@@ -181,21 +233,30 @@ gcloud run deploy votewise-ai \
 
 ---
 
-## ♿ Accessibility
+## ♿ Accessibility Features
+- **ARIA Labels:** Applied across all interactive elements (buttons, inputs, quick-chips).
+- **Screen Reader Support:** Implemented `role="log"` and `aria-live="polite"` on chat containers for dynamic response reading.
+- **Form Descriptions:** Used `aria-describedby` on eligibility inputs to guide visually impaired users.
+- **Keyboard Navigation:** Fully supported Tab indexing and Enter key handling across all tabs.
+- **High Contrast:** Tailored Indian flag color scheme ensuring optimal legibility.
 
-- ARIA labels on all interactive elements
-- Keyboard navigation support (Enter to send messages)
-- Screen reader-friendly live regions for chat and eligibility results
-- High contrast civic color scheme (saffron, blue, green — Indian flag inspired)
-- Responsive design for mobile and desktop
+---
+
+## ✨ UI & Efficiency Polish
+- **Debounced Interactions:** "Send" button debouncing prevents accidental double API calls, saving rate limits.
+- **Smart Loading States:** Interactive skeleton-style spinner provides immediate feedback during AI generation.
+- **Dynamic Quiz Explanations:** Explanations dynamically animate in post-answer without refreshing the state.
+- **Data Caching:** Quiz data and DOM states are cached to ensure zero-lag switching between tabs.
+- **Error Recovery:** Intuitive error handling with built-in "Retry" capabilities on network failure.
+- **One-Click Copy:** Native copy-to-clipboard functionality added directly to AI response bubbles.
 
 ---
 
 ## 🔐 Security
-
-- API keys stored as environment variables, never in code
-- Input validation on all API endpoints
-- CORS configured properly
+- API keys in environment variables only — never in code
+- .env in .gitignore — never pushed to GitHub
+- Input validation on all Flask endpoints
+- CORS properly configured
 - No sensitive data stored client-side
 
 ---
