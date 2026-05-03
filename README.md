@@ -2,6 +2,13 @@
 
 > An AI-powered interactive assistant that helps citizens understand the election process, voter rights, timelines, and civic duties.
 
+<div align="center">
+  <a href="https://votewise-ai-1074455053915.us-central1.run.app/">
+    <img src="https://img.shields.io/badge/🚀_Live_Demo-Click_Here-2ea44f?style=for-the-badge" alt="Live Demo" />
+  </a>
+</div>
+<br/>
+
 [![Google Cloud Run](https://img.shields.io/badge/Deployed%20on-Cloud%20Run-4285F4?logo=google-cloud)](https://cloud.google.com/run)
 [![Gemini AI](https://img.shields.io/badge/Powered%20by-Gemini%20AI-orange)](https://ai.google.dev)
 
@@ -101,14 +108,14 @@ PORT=8080
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="screenshots/ask_votewise.png" alt="Ask VoteWise AI Chatbot" width="100%"/>
+      <img src="Screenshots/ask_votewise.png" alt="Ask VoteWise AI Chatbot" width="100%"/>
       <br/>
       <b>💬 Ask VoteWise</b>
       <br/>
       <sub>AI-powered chatbot for all election queries</sub>
     </td>
     <td align="center" width="50%">
-      <img src="screenshots/election_timeline.png" alt="Election Timeline" width="100%"/>
+      <img src="Screenshots/election_timeline.png" alt="Election Timeline" width="100%"/>
       <br/>
       <b>📅 Election Timeline</b>
       <br/>
@@ -117,14 +124,14 @@ PORT=8080
   </tr>
   <tr>
     <td align="center" width="50%">
-      <img src="screenshots/civic_quiz.png" alt="Civic Quiz" width="100%"/>
+      <img src="Screenshots/civic_quiz.png" alt="Civic Quiz" width="100%"/>
       <br/>
       <b>🧠 Civic Quiz</b>
       <br/>
       <sub>8-question interactive quiz with live scoring</sub>
     </td>
     <td align="center" width="50%">
-      <img src="screenshots/am_i_eligible.png" alt="Voter Eligibility Checker" width="100%"/>
+      <img src="Screenshots/am_i_eligible.png" alt="Voter Eligibility Checker" width="100%"/>
       <br/>
       <b>✅ Am I Eligible?</b>
       <br/>
@@ -228,7 +235,7 @@ curl -X POST https://YOUR_CLOUD_RUN_URL/api/eligibility \
 ## 👨‍💻 Author
 
 **Shaik Asad Ahmed**  
-B.Tech Computer Science (AI) | 4th Year  
+B.Tech Computer Science (AI) 
 GitHub: [@shaikasadahmed2k23](https://github.com/shaikasadahmed2k23)
 
 ---
