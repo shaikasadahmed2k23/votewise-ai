@@ -93,13 +93,14 @@ If asked anything unrelated, politely redirect to election topics.
 ---
 
 ## ☁️ Google Services Used
-| Service | Purpose |
+| Service | How It's Used |
 |---|---|
-| Gemini 2.0 Flash API | Core AI chatbot and eligibility checker |
-| Google Cloud Run | Serverless deployment and hosting |
-| Google Antigravity | App built using intent-driven development |
+| Gemini 2.0 Flash | AI chatbot + eligibility checker |
+| Google Cloud Run | Serverless deployment |
+| Google Cloud Build | Container build pipeline |
+| Google Fonts (Sora) | Typography |
+| Google Analytics GA4 | Usage tracking |
 | Google Artifact Registry | Docker image storage |
-| Google Cloud Build | CI/CD container build pipeline |
 
 ---
 

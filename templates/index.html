@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VoteWise | Election Education Assistant</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
     <!-- Using Google Font Sora as requested -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,6 +42,28 @@
             margin: 0;
             padding: 0;
             font-family: 'Sora', sans-serif;
+        }
+
+        *:focus-visible {
+            outline: 3px solid var(--navy);
+            outline-offset: 2px;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: var(--navy);
+            color: var(--white);
+            padding: 10px 15px;
+            z-index: 10000;
+            text-decoration: none;
+            font-weight: bold;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
         }
 
         body {
@@ -150,8 +183,15 @@
         }
 
         @keyframes crossFade {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .tab-content.active {
@@ -335,13 +375,14 @@
             padding: 0.8rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            outline: none;
+            outline: 2px solid transparent;
             font-size: 1rem;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, outline-color 0.2s;
         }
 
         .chat-input-area input:focus {
             border-color: var(--navy);
+            outline-color: var(--navy);
         }
 
         .chat-input-area button {
@@ -547,7 +588,7 @@
 
         .form-group input:focus,
         .form-group select:focus {
-            outline: none;
+            outline: 2px solid var(--navy);
             border-color: var(--navy);
         }
 
@@ -607,25 +648,73 @@
                 padding-left: 10px;
             }
         }
-    
+
         /* New Classes to replace inline styles */
-        .text-saffron { color: var(--saffron); }
-        .text-white { color: var(--white); }
-        .text-navy { color: var(--navy); }
-        .text-light { color: var(--text-light); }
-        .m-0 { margin: 0; }
-        .mb-1-5 { margin-bottom: 1.5rem; }
-        .mb-2 { margin-bottom: 2rem; }
-        .mt-0-5 { margin-top: 0.5rem; }
-        .p-0 { padding: 0; }
-        .text-lg { font-size: 1.2rem; }
-        .text-xl { font-size: 1.5rem; }
-        .w-full { width: 100%; }
-        .max-w-600 { max-width: 600px; margin: 0 auto; }
-        .hidden { display: none !important; }
-        .flex { display: flex; }
-        .justify-between { justify-content: space-between; }
-        
+        .text-saffron {
+            color: var(--saffron);
+        }
+
+        .text-white {
+            color: var(--white);
+        }
+
+        .text-navy {
+            color: var(--navy);
+        }
+
+        .text-light {
+            color: var(--text-light);
+        }
+
+        .m-0 {
+            margin: 0;
+        }
+
+        .mb-1-5 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-0-5 {
+            margin-top: 0.5rem;
+        }
+
+        .p-0 {
+            padding: 0;
+        }
+
+        .text-lg {
+            font-size: 1.2rem;
+        }
+
+        .text-xl {
+            font-size: 1.5rem;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .max-w-600 {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
         /* Copy Button */
         .copy-btn {
             background: transparent;
@@ -640,7 +729,10 @@
             transition: color 0.2s;
             padding: 4px;
         }
-        .copy-btn:hover { color: var(--navy); }
+
+        .copy-btn:hover {
+            color: var(--navy);
+        }
 
         /* Quiz Explanation */
         .explanation {
@@ -674,13 +766,19 @@
         }
 
         /* Message header for Copy */
-        .message-content { flex: 1; }
-        .message-footer { display: flex; justify-content: flex-end; }
+        .message-content {
+            flex: 1;
+        }
 
+        .message-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
     </style>
 </head>
 
 <body>
+    <a href="#main" class="skip-link">Skip to main content</a>
 
     <!-- Top Flag Stripe -->
     <div class="flag-stripe">
@@ -690,26 +788,31 @@
     </div>
 
     <!-- Sticky Navbar -->
-    <nav>
+    <nav role="navigation" aria-label="Main navigation">
         <div class="nav-container">
             <a href="#" class="logo">
                 <span class="text-saffron">Vote</span><span class="text-white">Wise</span>
             </a>
             <div class="tab-buttons">
-                <button class="tab-btn active" aria-label="Ask VoteWise Tab" onclick="switchTab('chat', event)">💬 Ask VoteWise</button>
-                <button class="tab-btn" aria-label="Election Timeline Tab" onclick="switchTab('timeline', event)">📅 Election Timeline</button>
-                <button class="tab-btn" aria-label="Civic Quiz Tab" onclick="switchTab('quiz', event)">🧠 Civic Quiz</button>
-                <button class="tab-btn" aria-label="Check Eligibility Tab" onclick="switchTab('eligibility', event)">✅ Am I Eligible?</button>
+                <button class="tab-btn active" aria-label="Ask VoteWise Tab" aria-expanded="true" aria-selected="true"
+                    aria-controls="chat" onclick="switchTab('chat', event)">💬 Ask VoteWise</button>
+                <button class="tab-btn" aria-label="Election Timeline Tab" aria-expanded="false" aria-selected="false"
+                    aria-controls="timeline" onclick="switchTab('timeline', event)">📅 Election Timeline</button>
+                <button class="tab-btn" aria-label="Civic Quiz Tab" aria-expanded="false" aria-selected="false"
+                    aria-controls="quiz" onclick="switchTab('quiz', event)">🧠 Civic Quiz</button>
+                <button class="tab-btn" aria-label="Check Eligibility Tab" aria-expanded="false" aria-selected="false"
+                    aria-controls="eligibility" onclick="switchTab('eligibility', event)">✅ Am I Eligible?</button>
             </div>
         </div>
     </nav>
 
-    <main>
+    <main id="main" role="main">
         <!-- 1. Chat Tab -->
         <div id="chat" class="tab-content active">
             <div class="card p-0">
                 <div class="chat-container">
-                    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
+                    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite"
+                        aria-label="Chat messages">
                         <div class="message ai">
                             Hello! I'm VoteWise, your AI election assistant. Ask me anything about the Indian electoral
                             process, your voting rights, or how elections work!
@@ -722,17 +825,25 @@
                     </div>
 
                     <div class="quick-chips">
-                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('How voting works')">How voting works</div>
-                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('Register to vote')">Register to vote</div>
-                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('What is NOTA')">What is NOTA</div>
-                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('Vote counting')">Vote counting</div>
-                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('Voter rights')">Voter rights</div>
-                        <div class="chip" role="button" aria-label="Quick Question" tabindex="0" onclick="sendQuickMessage('Model Code')">Model Code</div>
+                        <div class="chip" role="button" aria-label="Quick Question: How voting works" tabindex="0"
+                            onclick="sendQuickMessage('How voting works')">How voting works</div>
+                        <div class="chip" role="button" aria-label="Quick Question: Register to vote" tabindex="0"
+                            onclick="sendQuickMessage('Register to vote')">Register to vote</div>
+                        <div class="chip" role="button" aria-label="Quick Question: What is NOTA" tabindex="0"
+                            onclick="sendQuickMessage('What is NOTA')">What is NOTA</div>
+                        <div class="chip" role="button" aria-label="Quick Question: Vote counting" tabindex="0"
+                            onclick="sendQuickMessage('Vote counting')">Vote counting</div>
+                        <div class="chip" role="button" aria-label="Quick Question: Voter rights" tabindex="0"
+                            onclick="sendQuickMessage('Voter rights')">Voter rights</div>
+                        <div class="chip" role="button" aria-label="Quick Question: Model Code" tabindex="0"
+                            onclick="sendQuickMessage('Model Code')">Model Code</div>
                     </div>
 
+                    <span id="chat-helper" class="hidden">Press enter to send your message</span>
                     <div class="chat-input-area">
                         <input type="text" id="chat-input" placeholder="Type your question here..."
-                            aria-label="Chat Input" maxlength="500" oninput="updateCharCount()" onkeypress="handleEnter(event)">
+                            aria-label="Chat Input" aria-required="true" aria-describedby="chat-helper" maxlength="500"
+                            oninput="updateCharCount()" onkeypress="handleEnter(event)">
                         <button id="send-btn" onclick="sendMessage()" aria-label="Send Message">Send</button>
                     </div>
                     <div id="char-count">0/500</div>
@@ -861,14 +972,17 @@
                     </div>
                     <div id="quiz-explanation" class="explanation"></div>
 
-                    <button id="next-btn" class="btn-primary" onclick="nextQuestion()">Next Question</button>
+                    <button id="next-btn" class="btn-primary" onclick="nextQuestion()" aria-label="Next Question">Next
+                        Question</button>
                 </div>
 
                 <div id="quiz-result" class="quiz-result">
                     <h3>Quiz Completed!</h3>
-                    <p class="text-lg mb-1-5">Your Score: <strong id="score" class="text-navy text-xl">0 / 8</strong></p>
+                    <p class="text-lg mb-1-5">Your Score: <strong id="score" class="text-navy text-xl"
+                            aria-label="Quiz score">0 / 8</strong>
+                    </p>
                     <p id="score-message" class="mb-2 text-light"></p>
-                    <button class="btn-primary" onclick="startQuiz()">Retry Quiz</button>
+                    <button class="btn-primary" onclick="startQuiz()" aria-label="Retry Quiz">Retry Quiz</button>
                 </div>
             </div>
         </div>
@@ -883,7 +997,8 @@
                 <div class="form-group">
                     <span id="country-desc" class="hidden">Select your country of citizenship.</span>
                     <label for="country">Country of Citizenship</label>
-                    <select id="country" aria-describedby="country-desc">
+                    <select id="country" aria-describedby="country-desc" aria-label="Country of Citizenship"
+                        aria-required="true">
                         <option value="">Select a country...</option>
                         <option value="India">India</option>
                         <option value="USA">United States</option>
@@ -895,16 +1010,18 @@
                 <div class="form-group">
                     <span id="age-desc" class="hidden">Enter your age in years.</span>
                     <label for="age">Your Age (in years)</label>
-                    <input type="number" id="age" min="1" max="120" placeholder="e.g. 21" aria-describedby="age-desc">
+                    <input type="number" id="age" min="1" max="120" placeholder="e.g. 21" aria-describedby="age-desc"
+                        aria-label="Your Age" aria-required="true">
                 </div>
 
-                <button class="btn-primary" class="w-full mt-0-5" onclick="checkEligibility()">Check
+                <button class="btn-primary w-full mt-0-5" onclick="checkEligibility()"
+                    aria-label="Check Eligibility">Check
                     Eligibility</button>
 
-                <div id="eligibility-result" class="result-box"></div>
+                <div id="eligibility-result" class="result-box" role="alert"></div>
             </div>
         </div>
-        </main>
+    </main>
     <footer class="app-footer">
         Built with ❤️ for Prompt Wars by GDG | Powered by Gemini AI
     </footer>
@@ -914,7 +1031,7 @@
         const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
         const typingIndicator = document.getElementById('typing-indicator');
-        
+
         // State variables
         let isSending = false;
         let lastMessage = "";
@@ -934,12 +1051,33 @@
          * @param {Event} event - The click event object
          */
         function switchTab(tabId, event) {
-            // ... (keep existing body except add check for quiz caching) ...
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            if (event) event.currentTarget.classList.add('active');
-            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.setAttribute('aria-selected', 'false');
+            });
+            if (event) {
+                event.currentTarget.classList.add('active');
+                event.currentTarget.setAttribute('aria-expanded', 'true');
+                event.currentTarget.setAttribute('aria-selected', 'true');
+            }
+
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
+
+            const titles = {
+                'chat': 'VoteWise | Ask VoteWise',
+                'timeline': 'VoteWise | Election Timeline',
+                'quiz': 'VoteWise | Civic Quiz',
+                'eligibility': 'VoteWise | Check Eligibility'
+            };
+            document.title = titles[tabId] || 'VoteWise | Election Education Assistant';
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'tab_switched', {
+                    'tab_id': tabId
+                });
+            }
 
             if (tabId === 'quiz' && currentQuestion === 0 && score === 0 && document.getElementById('options').innerHTML.trim() === '') {
                 startQuiz();
@@ -984,13 +1122,17 @@
          */
         async function sendMessage(retryText = null) {
             if (isSending) return;
-            
+
             const message = retryText || chatInput.value.trim();
             if (!message) return;
 
             isSending = true;
             lastMessage = message;
-            
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'chat_message_sent');
+            }
+
             const sendBtn = document.getElementById('send-btn');
             sendBtn.disabled = true;
             sendBtn.textContent = '...';
@@ -1001,7 +1143,7 @@
             if (!retryText) {
                 addMessageToChat('user', message);
             }
-            
+
             chatInput.value = '';
             updateCharCount();
 
@@ -1020,7 +1162,7 @@
 
                 const data = await response.json();
                 typingIndicator.classList.remove('active');
-                
+
                 const botReply = data.response || data.reply || data.answer || "I received your message but couldn't parse the response.";
                 addMessageToChat('ai', botReply);
 
@@ -1042,14 +1184,18 @@
         function addMessageToChat(role, text) {
             const div = document.createElement('div');
             div.className = `message ${role}`;
-            
+
+            if (role === 'error') {
+                div.setAttribute('role', 'alert');
+            }
+
             if (role === 'ai') {
                 div.innerHTML = `<div class="message-content">${text.replace(/\n/g, '<br>')}</div>
                                  <div class="message-footer">
                                     <button class="copy-btn" onclick="copyText(this, \`${text.replace(/`/g, '\`')}\`)" aria-label="Copy response">📄 Copy</button>
                                  </div>`;
             } else if (role === 'error') {
-                div.innerHTML = `<div>${text}</div><button class="btn-primary" style="margin-top: 10px; padding: 0.5rem 1rem;" onclick="sendMessage(lastMessage)">Retry</button>`;
+                div.innerHTML = `<div>${text}</div><button class="btn-primary" style="margin-top: 10px; padding: 0.5rem 1rem;" onclick="sendMessage(lastMessage)" aria-label="Retry Sending Message">Retry</button>`;
             } else {
                 div.textContent = text;
             }
@@ -1122,6 +1268,7 @@
                 btn.className = 'option';
                 btn.textContent = opt;
                 btn.setAttribute('aria-label', `Option: ${opt}`);
+                btn.setAttribute('aria-pressed', 'false');
                 btn.onclick = () => selectOption(index, btn);
                 optionsContainer.appendChild(btn);
             });
@@ -1135,6 +1282,7 @@
         function selectOption(selectedIndex, btnElement) {
             const allOptions = optionsContainer.querySelectorAll('.option');
             allOptions.forEach(opt => opt.classList.add('disabled'));
+            btnElement.setAttribute('aria-pressed', 'true');
 
             const correctIndex = quizData[currentQuestion].correct;
 
@@ -1152,7 +1300,37 @@
             nextBtn.style.display = 'block';
             progressFill.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
         }
-// --- Eligibility Logic ---
+
+        /**
+         * Advances to the next question or shows results
+         */
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                quizGame.style.display = 'none';
+                quizResultBox.style.display = 'block';
+                document.getElementById('score').textContent = `${score} / ${quizData.length}`;
+
+                const scoreMessage = document.getElementById('score-message');
+                if (score === quizData.length) {
+                    scoreMessage.textContent = "Perfect! You're an election expert.";
+                } else if (score >= quizData.length / 2) {
+                    scoreMessage.textContent = "Great job! You know your basics well.";
+                } else {
+                    scoreMessage.textContent = "Good try! Review the timeline to learn more.";
+                }
+
+                if (typeof gtag === 'function') {
+                    gtag('event', 'quiz_completed', {
+                        'score': score
+                    });
+                }
+            }
+        }
+
+        // --- Eligibility Logic ---
         /**
          * Evaluates voter eligibility based on age and country
          */
@@ -1169,6 +1347,13 @@
             const age = parseInt(ageInput, 10);
             resultBox.style.display = 'block';
             resultBox.classList.remove('eligible', 'not-eligible');
+
+            if (typeof gtag === 'function') {
+                gtag('event', 'eligibility_checked', {
+                    'country': country,
+                    'age': age
+                });
+            }
 
             if (country === 'India') {
                 if (age >= 18) {

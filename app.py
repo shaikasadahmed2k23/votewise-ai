@@ -6,6 +6,8 @@ load_dotenv()
 
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from google import genai
 from datetime import datetime
 
@@ -14,6 +16,44 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
+
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024  # 16KB max
+
+@app.after_request
+def add_security_headers(response):
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Content-Security-Policy'] = "default-src 'self'"
+    return response
+
+@app.errorhandler(400)
+def bad_request(e):
+    return jsonify({"error": "Bad Request", "status": 400}), 400
+
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Not Found", "status": 404}), 404
+
+@app.errorhandler(413)
+def request_entity_too_large(e):
+    return jsonify({"error": "Payload Too Large", "status": 413}), 413
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return jsonify({"error": "Rate limit exceeded", "status": 429}), 429
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return jsonify({"error": "Internal Server Error", "status": 500}), 500
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 client = genai.Client(api_key=GEMINI_API_KEY)
@@ -80,15 +120,23 @@ def index():
     return render_template("index.html")
 
 @app.route("/api/chat", methods=["POST"])
+@limiter.limit("20 per minute")
 def chat():
     try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"error": "Message is required"}), 400
-        user_message = data.get("message", "").strip()
+        data = request.get_json(silent=True)
+        if data is None:
+            logger.warning("Suspicious input: malformed JSON in /api/chat")
+            return jsonify({"error": "Invalid JSON", "status": 400}), 400
+            
+        user_message_raw = str(data.get("message", ""))
+        if len(user_message_raw) > 500:
+            logger.warning(f"Suspicious input: chat message too long ({len(user_message_raw)} chars)")
+            
+        user_message = user_message_raw.strip()[:500]
         chat_history = data.get("history", [])
+        
         if not user_message:
-            return jsonify({"error": "Message is required"}), 400
+            return jsonify({"error": "Message is required", "status": 400}), 400
         conversation = SYSTEM_PROMPT + "\n\n"
         for msg in chat_history[-10:]:
             role_label = "User" if msg["role"] == "user" else "VoteWise AI"
@@ -104,7 +152,7 @@ def chat():
         return jsonify({"reply": reply, "status": "success"})
     except Exception as e:
         logger.error(f"Chat error: {e}")
-        return jsonify({"error": "Something went wrong. Please try again.", "status": "error"}), 500
+        return jsonify({"error": "Something went wrong. Please try again.", "status": 500}), 500
 
 @app.route("/api/quiz", methods=["GET"])
 def get_quiz():
@@ -115,25 +163,36 @@ def get_timeline():
     return jsonify({"timeline": ELECTION_TIMELINE})
 
 @app.route("/api/eligibility", methods=["POST"])
+@limiter.limit("30 per minute")
 def check_eligibility():
     try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"error": "Invalid request"}), 400
-        age = int(data.get("age", 0))
-        country = data.get("country", "India").strip()
+        data = request.get_json(silent=True)
+        if data is None:
+            logger.warning("Suspicious input: malformed JSON in /api/eligibility")
+            return jsonify({"error": "Invalid JSON", "status": 400}), 400
+            
+        try:
+            age = int(data.get("age", 0))
+        except (ValueError, TypeError):
+            logger.warning("Suspicious input: age is not a valid number")
+            return jsonify({"error": "Invalid age format", "status": 400}), 400
+            
+        country = str(data.get("country", "India")).strip()[:100]
+        
         if age < 1 or age > 120:
-            return jsonify({"error": "Invalid age"}), 400
+            logger.warning(f"Suspicious input: invalid age value ({age})")
+            return jsonify({"error": "Age must be between 1 and 120", "status": 400}), 400
+            
         prompt = f"{SYSTEM_PROMPT}\n\nA user wants to know about voter eligibility.\nAge: {age} years old\nCountry: {country}\nTell them: 1. Whether they are eligible 2. What documents they need 3. How to register 4. Important deadlines. Be specific to {country}. Use bullet points."
         response = client.models.generate_content(model=MODEL, contents=prompt)
         return jsonify({"result": response.text, "age": age, "country": country})
     except Exception as e:
         logger.error(f"Eligibility error: {e}")
-        return jsonify({"error": "Could not check eligibility."}), 500
+        return jsonify({"error": "Could not check eligibility.", "status": 500}), 500
 
 @app.route("/api/health", methods=["GET"])
 def health():
-    return jsonify({"status": "healthy", "service": "VoteWise AI", "timestamp": datetime.now().isoformat()})
+    return jsonify({"status": "healthy", "model": "gemini-2.0-flash", "service": "VoteWise AI", "version": "1.0.0"})
 
 def log_to_sheets(question: str, answer: str):
     from google.oauth2 import service_account
